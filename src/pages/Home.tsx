@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
+import { View } from 'react-native';
 
 import { Header } from '../components/Header';
 import { MyTasksList } from '../components/MyTasksList';
@@ -12,6 +13,9 @@ interface Task {
 
 export function Home() {
    const [tasks, setTasks] = useState<Task[]>([]);
+   const [isEnabled, setIsEnabled] = useState(false);
+   const toggleSwitch = () => setIsEnabled(previousState => !previousState); 
+
 
   function handleAddTask(newTaskTitle: string) {
     //TODO - add new task if it's not empty
@@ -49,16 +53,17 @@ export function Home() {
   }
 
   return (
-    <>
-      <Header />
+    <View style={{flex:1,backgroundColor:isEnabled ? "#191D3A" : '#FFFFFF'}}>
+      <Header isEnabled={isEnabled} onValueChange={toggleSwitch}/>
 
-      <TodoInput addTask={handleAddTask} />
+      <TodoInput addTask={handleAddTask} isEnabled={isEnabled} />
 
       <MyTasksList 
         tasks={tasks} 
         onPress={handleMarkTaskAsDone} 
-        onLongPress={handleRemoveTask} 
+        onLongPress={handleRemoveTask}
+        isEnabled={isEnabled} 
       />
-    </>
+    </View>
   )
 }
